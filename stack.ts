@@ -7,21 +7,14 @@ export interface Stack {
     child: Stack | null;
 };
 
-export function _iter<ret_t>(op: (s: Stack) => ret_t, stack: Stack | null): ret_t
-{
-    if (stack === null) {
-        return op(stack);
-    } else {
-        _iter(op, stack.child);
-    }
-}
+export let __=(o,i,r=x=>x.child===null)=>(f=>f(f))(f=>c=>r(c)?o(c):f(f)(c.child))(i);
 
 export function stack_normal_push(v: number, stack: Stack)
 {
-    _iter((s: Stack) => s.stack.push(v), stack);
+    __((s: Stack) => s.stack.push(v), stack);
 }
 
 export function stack_normal_pop(stack: Stack)
 {
-    return _iter((s: Stack) => s.stack.pop(), stack);
+    return __((s: Stack) => s.stack.pop(), stack);
 }

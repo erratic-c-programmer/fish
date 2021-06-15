@@ -24,17 +24,19 @@ export interface Codebox {
 };
 
 export function codebox_arrconv(in_: string[]) {
-    let ret = new Map;
+    let ret = {IP: {dir: IP_DIRS.E, posx: 0, posy: 0}, codebox: new Map, maxx: 0, maxy: 0};
     let i = 0;
     let j = 0;
     for (const e0 of in_) {
-        i = 0;
+        j = 0;
         for (const _ of e0) {
-            ret[JSON.stringify([i, j])] = in_[i][j];
+            ret.codebox[JSON.stringify([j, i])] = in_[i][j];
             j += 1;
         }
+        ret.maxx = Math.max(ret.maxx, j);
         i += 1;
     }
+    ret.maxy = i;
     return ret;
 }
 
