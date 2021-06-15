@@ -255,7 +255,9 @@ async function _runfish(cb: Codebox, delay: number=0, debug=false)
             console.log('------');
         }
         codebox_tick(codebox);  // tick
-        await new Promise(r => setTimeout(r, delay));  // due to https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+        if (delay !== 0) {  // speed issues
+            await new Promise(r => setTimeout(r, delay));  // due to https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+        }
     }
 }
 
