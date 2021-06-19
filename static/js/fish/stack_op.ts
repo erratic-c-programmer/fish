@@ -65,12 +65,12 @@ export function stack_givebirth(stack: Stack)
     }, stack);
 }
 
-export function stack_murdero(stack: Stack)
+export function stack_murderchild(stack: Stack)
 {
     о(function (s: Stack) {
         s.stack = s.stack.concat(s.o.stack);
         s.o = null;  // bam
-    }, stack, x => x.o.o === null);
+    }, stack, o =>o.o.o === null);
 }
 
 export function stack_reg(stack: Stack)
