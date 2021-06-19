@@ -5,7 +5,7 @@ import { Codebox, IP_DIRS, codebox_ip_chdir, codebox_ipget, codebox_ipgetdir, co
 
 import { stack_normal_push, stack_normal_pop, } from "./stack";
 
-import { stack_dup, stack_pop, stack_swap, stack_swap_three, stack_shift_left, stack_shift_right, stack_reverse, stack_pushlen, stack_givebirth, stack_murderchild, stack_reg, } from "./stack_op";
+import { stack_dup, stack_pop, stack_swap, stack_swap_three, stack_shift_left, stack_shift_right, stack_reverse, stack_pushlen, stack_givebirth, stack_murdero, stack_reg, } from "./stack_op";
 
 import { sane_switch, } from "./sanity";
 
@@ -14,7 +14,7 @@ async function _runfish(cb: Codebox, delay: number=0, debug=false)
 {
     delay
     let codebox = cb;
-    let stack = {stack: [], reg: null, child: null};
+    let stack = {stack: [], reg: null, o: null};
     let runningp = true;
     let stringmode_p = false;
 
@@ -105,7 +105,7 @@ async function _runfish(cb: Codebox, delay: number=0, debug=false)
                     stack_givebirth(stack);
                     break;
                 case "]":
-                    stack_murderchild(stack);
+                    stack_murdero(stack);
                     break;
                 case "g": {
                     let y = stack_normal_pop(stack);
