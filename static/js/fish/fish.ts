@@ -10,13 +10,14 @@ import { stack_dup, stack_pop, stack_swap, stack_swap_three, stack_shift_left, s
 import { sane_switch, } from "./sanity";
 
 // UGLY FUNCTION, whatever
-async function _runfish(cb: Codebox, delay: number=0, debug=false)
+async function _runfish(cb: Codebox, outid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
 {
     delay
     let codebox = cb;
     let stack = {stack: [], reg: null, o: null};
     let runningp = true;
     let stringmode_p = false;
+    let cntr = 0;
 
     while (runningp) {
         let op = codebox_ipget(codebox);
@@ -230,10 +231,18 @@ async function _runfish(cb: Codebox, delay: number=0, debug=false)
 
                 // IO
                 case "o":
-                    process.stdout.write(String.fromCharCode(stack_normal_pop(stack)));
+                    if (outid === null) {  // node
+                        process.stdout.write(String.fromCharCode(stack_normal_pop(stack)));
+                    } else {
+                        outid.append(String.fromCharCode(stack_normal_pop(stack)));
+                    }
                     break;
                 case "n":
-                    process.stdout.write(stack_normal_pop(stack).toString());
+                    if (outid === null) {  // node
+                        process.stdout.write(stack_normal_pop(stack).toString());
+                    } else {
+                        outid.append(stack_normal_pop(stack).toString());
+                    }
                     break;
 
 
@@ -255,17 +264,22 @@ async function _runfish(cb: Codebox, delay: number=0, debug=false)
             console.log('------');
         }
         codebox_tick(codebox);  // tick
+        cntr += 1;
+        if (ticks > 0 && cntr >= ticks) {
+            runningp = false;
+        }
+
         if (delay !== 0) {  // speed issues
             await new Promise(r => setTimeout(r, delay));  // due to https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
         }
     }
 }
 
-export async function runfish(cb: Codebox, delay: number=0, debug=false)
+export async function runfish(cb: Codebox, outid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
 {
     try {
-        await _runfish(cb, delay, debug);
-    } catch (error) {
+        await _runfish(cb, outid, delay, ticks, debug);
+    } catch (e) {
         throw new Error("something smells fishy...");
     }
 }

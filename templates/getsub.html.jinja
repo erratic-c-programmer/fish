@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{subid}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{url_for('static', filename='js/fish/build/lib.js')}}"></script>
+    <p id="out"></p>
+  </head>
+  <body>
+    <p id="out"></p>
+  </body>
+
+  <script>
+    runfish(codebox_arrconv({{code}}), document.getElementById("out"), 1);
+  </script>
+</html>

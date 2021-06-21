@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Online &gt;&lt;&gt; interpreter</title>
+  </head>
+  <body>
+    <div id="toptitle">
+      <h1>Welcome to the free online &gt;&lt;&gt; interpreter and debugger!</h1>
+      <p class="disclaimer">Disclaimer: all code put here is available to everyone.</p>
+    </div>
+
+    <!-- the submissions -->
+
+    <table id="submissions">
+      <tr>
+        <th>Submission ID</th>
+        <th>Author</th>
+      </tr>
+      {% for k, v in submissions.items() %}
+      <tr>
+        <td><a href="/getsub?subid={{k}}">{{k}}</a></th>
+        <td>{{v["author"]}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </body>
+</html>

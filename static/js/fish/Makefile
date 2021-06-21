@@ -1,11 +1,14 @@
 BUILDDIR = build
-JS = build/fish.js build/stack.js build/stack_op.js build/codebox_op.js build/sanity.js build/test.js
+JS_NOTEST = build/fish.js build/stack.js build/stack_op.js build/codebox_op.js build/sanity.js
 
-all : $(JS)
+all : $(BUILDDIR)/lib.js $(BUILDDIR)/test.js
 	cat $^ | sed 's/import.*//g' | sed 's/export//g' > $(BUILDDIR)/hoho.js
 
+build/lib.js : $(JS_NOTEST)
+	cat $^ | sed 's/import.*//g' | sed 's/export//g' > $@
+
 build/%.js : %.ts
-	tsc --target es6 --lib es6,dom --outDir $(BUILDDIR) $<
+	tsc --target esnext --lib dom --outDir $(BUILDDIR) $<
 
 clean :
 	rm -f $(BUILDDIR)/*.js
