@@ -10,9 +10,8 @@ import { stack_dup, stack_pop, stack_swap, stack_swap_three, stack_shift_left, s
 import { sane_switch, } from "./sanity";
 
 // UGLY FUNCTION, whatever
-async function _runfish(cb: Codebox, outid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
+async function _runfish(cb: Codebox, outid: Element|null, debugid: Element|null, delay: number, ticks: number, debug: boolean)
 {
-    delay
     let codebox = cb;
     let stack = {stack: [], reg: null, o: null};
     let runningp = true;
@@ -27,7 +26,7 @@ async function _runfish(cb: Codebox, outid: Element|null=null, delay: number=0, 
             if (op === '"' || op === "'") {
                 stringmode_p = false;
             } else {
-                stack_normal_push(op.charCodeAt(0), stack);
+                stack_normal_push((<string>op).charCodeAt(0), stack);
             }
         } else {
 
@@ -111,22 +110,22 @@ async function _runfish(cb: Codebox, outid: Element|null=null, delay: number=0, 
                 case "g": {
                     let y = stack_normal_pop(stack);
                     let x = stack_normal_pop(stack);
-                    stack_normal_push(codebox_get(x, y, codebox), stack);
+                    stack_normal_push(parseInt(codebox_get(x, y, codebox)), stack);
                     break;
                 }
                 case "p": {
                     let y = stack_normal_pop(stack);
                     let x = stack_normal_pop(stack);
                     let v = stack_normal_pop(stack);
-                    codebox_write(v, x, y, codebox);
+                    codebox_write(v.charCodeAt(0), x, y, codebox);
                     codebox.maxx = Math.max(codebox.maxx, x);
                     codebox.maxy = Math.max(codebox.maxx, y);
-                    stack_normal_push(codebox_get(x, y, codebox), stack);
+                    stack_normal_push(parseInt(codebox_get(x, y, codebox)), stack);
                     break;
                 }
 
 
-                // Meth (from aritHMETic; rearranged. Yeah, so what?)
+                // Math
                 case "+": {
                     let b = stack_normal_pop(stack);
                     let a = stack_normal_pop(stack);
@@ -269,16 +268,29 @@ async function _runfish(cb: Codebox, outid: Element|null=null, delay: number=0, 
             runningp = false;
         }
 
-        if (delay !== 0) {  // speed issues
+        if (debugid !== null) {
+            // print the codebox, highlighting IP
+            debugid.innerHTML = "";
+            for (let i = 0; i < codebox.maxy; i++) {
+                for (let j = 0; j < codebox.maxx; j++) {
+                    let t = codebox_get(j, i, codebox); 
+                    debugid.innerHTML += t === null ? " " : t;
+                }
+                debugid.innerHTML += "\n";
+            }
+        }
+
+        if (delay !== 0) {  // performance issues
             await new Promise(r => setTimeout(r, delay));  // due to https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
         }
+        console.log(codebox.codebox);
     }
 }
 
-export async function runfish(cb: Codebox, outid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
+export async function runfish(cb: Codebox, outid: Element|null=null, debugid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
 {
     try {
-        await _runfish(cb, outid, delay, ticks, debug);
+        await _runfish(cb, outid, debugid, delay, ticks, debug);
     } catch (e) {
         throw new Error("something smells fishy...");
     }

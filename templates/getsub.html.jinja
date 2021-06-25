@@ -5,13 +5,17 @@
     <title>{{subid}}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{url_for('static', filename='js/fish/build/lib.js')}}"></script>
-    <p id="out"></p>
   </head>
   <body>
-    <p id="out"></p>
+    
+    <div class="vl" id="odsep"></div>
+    <div class="fishinterout">
+      <p id="out"></p>
+      <p id="debug"></p>
+    </div>
   </body>
 
   <script>
-    runfish(codebox_arrconv({{code}}), document.getElementById("out"), 1);
+    runfish(codebox_arrconv({{code}}), document.getElementById("out"), document.getElementById("debug"), 1);
   </script>
 </html>

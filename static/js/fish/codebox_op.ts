@@ -8,8 +8,6 @@ export const IP_DIRS = {
 	W: 2,
 };
 
-export type CBEntry = string | number;
-
 export interface InstructionPointer {
     dir: number;
     posx: number;
@@ -18,7 +16,7 @@ export interface InstructionPointer {
 
 export interface Codebox {
     IP: InstructionPointer;
-    codebox: Map<[string, number], CBEntry>;
+    codebox: Map<string, string>;
     maxx: number;
     maxy: number;
 };
@@ -30,7 +28,7 @@ export function codebox_arrconv(in_: string[]) {
     for (const e0 of in_) {
         j = 0;
         for (const _ of e0) {
-            ret.codebox[JSON.stringify([j, i])] = in_[i][j];
+            ret.codebox.set(JSON.stringify([j, i]), in_[i][j]);
             j += 1;
         }
         ret.maxx = Math.max(ret.maxx, j);
@@ -59,15 +57,14 @@ export function codebox_dir_reflect_x(cb: Codebox)  // about the x
     }
 }
 
-export function codebox_write(val: CBEntry, posx: number, posy: number, cb: Codebox)
+export function codebox_write(val: string, posx: number, posy: number, cb: Codebox)
 {
-    cb.codebox[JSON.stringify([posx, posy])] = val;
+    cb.codebox.set(JSON.stringify([posx, posy]), val);
 }
 
 export function codebox_get(posx: number, posy: number, cb: Codebox)
 {
-    let r = cb.codebox[JSON.stringify([posx, posy])];
-    return (typeof(r) == "undefined" ? 0 : r)
+    return cb.codebox.has(JSON.stringify([posx, posy])) ? cb.codebox.get(JSON.stringify([posx, posy])) : "";
 }
 
 export function codebox_tick(cb: Codebox)
@@ -103,7 +100,7 @@ export function codebox_ip_chdir(dir: number, cb: Codebox)
 
 export function codebox_ipget(cb: Codebox)
 {
-    return cb.codebox[JSON.stringify([cb.IP.posx, cb.IP.posy])];
+    return cb.codebox.get(JSON.stringify([cb.IP.posx, cb.IP.posy]));
 }
 
 export function codebox_ipgetdir(cb: Codebox)

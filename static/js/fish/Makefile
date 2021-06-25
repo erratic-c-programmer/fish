@@ -8,7 +8,7 @@ build/lib.js : $(JS_NOTEST)
 	cat $^ | sed 's/import.*//g' | sed 's/export//g' > $@
 
 build/%.js : %.ts
-	tsc --target esnext --lib dom --outDir $(BUILDDIR) $<
+	tsc $< --target esnext --lib dom --outDir $(BUILDDIR)
 
 clean :
 	rm -f $(BUILDDIR)/*.js
