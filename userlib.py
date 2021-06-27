@@ -26,7 +26,7 @@ def hash_uname(plain):
 ######
 
 
-class userfile:
+class userfile:  # why is this a class... gonna have to rewrite this someday
     def __init__(self, passwdfilename, shadowfilename):
         self.pwfname = passwdfilename
         self.sfname = shadowfilename
