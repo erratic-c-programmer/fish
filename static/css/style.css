@@ -39,6 +39,7 @@ table, th, td {
 #submissions {
   margin-left: auto;
   margin-right: auto;
+  width: 60%;
 }
 
 #submitbtn {

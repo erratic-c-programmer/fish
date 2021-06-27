@@ -48,7 +48,7 @@ def submit():
 @app.route("/postsubmit", methods=["POST"])
 def postsubmit():
     try:
-        # Create it if it does not exist, else do nothing
+        # Create file if it does not exist, else do nothing
         f = open(os.path.join("userdata", request.form["title"]), "x")
         f.close()
         f = open(os.path.join("userdata", request.form["title"]), "w")
@@ -71,5 +71,25 @@ def postsubmit():
 
     return redirect("/")
 
+@app.route("/delsub", methods=["GET"])
+def delsub():
+    with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+        curdata = json.loads(subsf.read())
+        try:
+            os.remove(os.path.join(
+                "userdata",
+                curdata[request.args.get("subid")]["file"]
+            ))  # remove the file...
+        except OSError:
+            #  for some reason the file did not exist... or maybe permissions messed up?
+            pass
+
+        del curdata[request.args.get("subid")]  # remove that entry...
+
+        subsf.seek(0)
+        subsf.truncate()
+        subsf.write(json.dumps(curdata))  # and write the new one
+
+    return redirect("/")
 
 app.run(host="0.0.0.0", port=8080, debug=True)
