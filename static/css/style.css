@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: sans-serif;
   font-size: initial;
@@ -78,25 +82,33 @@ table, th, td {
 }
 
 .fishinterout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-    gap: 10px;
 }
 
 #out {
-    grid-column: 1 / span 1;
-    grid-row: 1 / span 1;
+  float: left;
+
+  width: 49vw;
+  height: 100vh;
+
+  font-family: monospace;
+  font-size: 1.5em;
+  line-height: 1.1em;
+  white-space: pre-wrap;
+
+  padding-left: 1ch;
+  overflow: auto;
 }
 
 #debug {
-    grid-column: 2 / span 1;
-    grid-row: 1 / span 1;
-}
+  float: right;
 
-#out, #debug {
+  width: 49vw;
+  height: 100vh;
+
   font-family: monospace;
-  font-size: 1.5em;
-  line-height: 0.75em;
-  white-space: pre-wrap;
+  line-height: 0.3em;
+  white-space: pre;
+
+  padding-left: 2ch;
+  overflow: auto;
 }

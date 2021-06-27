@@ -27,7 +27,7 @@ def getsub():
     with open(os.path.join("userdata", data[subid]["file"]), "r") as f:
         code = []
         for l in f:
-            code.append(list(l))
+            code.append(list(l.rstrip()))
 
         ret = render_template(
             "getsub.html.jinja",
@@ -35,6 +35,7 @@ def getsub():
             author=data[subid]["author"],
             file=data[subid]["file"],
             code=json.dumps(code),
+            codepy=code,  # can't seem to get jinja to parse JSON ;-;
         )
         return ret
 
@@ -62,7 +63,7 @@ def postsubmit():
                 "file": request.form["title"],
             }
             subsf.seek(0)
-            subsf.truncate
+            subsf.truncate()
             subsf.write(json.dumps(curdata))
 
     except OSError:  # ...no overwriting other submissions, sorry mate

@@ -10,7 +10,7 @@ import { stack_dup, stack_pop, stack_swap, stack_swap_three, stack_shift_left, s
 import { sane_switch, } from "./sanity";
 
 // UGLY FUNCTION, whatever
-async function _runfish(cb: Codebox, outid: Element|null, debugid: Element|null, delay: number, ticks: number, debug: boolean)
+async function _runfish(cb: Codebox, outid: Element|null, delay: number, ticks: number, debug: boolean)
 {
     let codebox = cb;
     let stack = {stack: [], reg: null, o: null};
@@ -268,29 +268,16 @@ async function _runfish(cb: Codebox, outid: Element|null, debugid: Element|null,
             runningp = false;
         }
 
-        if (debugid !== null) {
-            // print the codebox, highlighting IP
-            debugid.innerHTML = "";
-            for (let i = 0; i < codebox.maxy; i++) {
-                for (let j = 0; j < codebox.maxx; j++) {
-                    let t = codebox_get(j, i, codebox); 
-                    debugid.innerHTML += t === null ? " " : t;
-                }
-                debugid.innerHTML += "\n";
-            }
-        }
-
         if (delay !== 0) {  // performance issues
             await new Promise(r => setTimeout(r, delay));  // due to https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
         }
-        console.log(codebox.codebox);
     }
 }
 
-export async function runfish(cb: Codebox, outid: Element|null=null, debugid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
+export async function runfish(cb: Codebox, outid: Element|null=null, delay: number=0, ticks: number=0, debug: boolean=false)
 {
     try {
-        await _runfish(cb, outid, debugid, delay, ticks, debug);
+        await _runfish(cb, outid, delay, ticks, debug);
     } catch (e) {
         throw new Error("something smells fishy...");
     }

@@ -11,11 +11,17 @@
     <div class="vl" id="odsep"></div>
     <div class="fishinterout">
       <p id="out"></p>
-      <p id="debug"></p>
+      <p id="debug">
+      {# draw codebox iteratively #}
+{% for l in codepy %}
+{% for c in l %}{{c}}{% endfor %}
+<br>
+{% endfor %}
+      </p>
     </div>
   </body>
 
   <script>
-    runfish(codebox_arrconv({{code}}), document.getElementById("out"), document.getElementById("debug"), 1);
+    runfish(codebox_arrconv({{code}}), document.getElementById("out"), 1);
   </script>
 </html>
