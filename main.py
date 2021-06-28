@@ -3,7 +3,9 @@
 import flask
 import os
 import json
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect
+
+import userlib as ul
 
 app = flask.Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -45,6 +47,28 @@ def submit():
     return render_template("submit.html.jinja")
 
 
+@app.route("/editsub", methods=["GET", "POST"])
+def editsub():
+    with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+        curdata = json.loads(subsf.read())
+        with open(
+            os.path.join("userdata", curdata[request.args.get("subid")]["file"]), "r+"
+        ) as cbf:
+            return render_template(
+                "edit.html.jinja", subid=request.args.get("subid"), codebox=cbf.read()
+            )
+
+@app.route("/postedit", methods=["POST", "GET"])
+def postedit():
+    with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+        curdata = json.loads(subsf.read())
+        with open(
+            os.path.join("userdata", curdata[request.args.get("subid")]["file"]), "w"
+        ) as cbf:
+            cbf.write(request.form["codebox"])
+    return redirect("/")
+
+
 @app.route("/postsubmit", methods=["POST"])
 def postsubmit():
     try:
@@ -66,23 +90,34 @@ def postsubmit():
             subsf.truncate()
             subsf.write(json.dumps(curdata))
 
+            uf = ul.userfile(
+                os.path.join("userdata", "passwd"), os.path.join("userdata", "shadow")
+            )
+
+            uf.add_user(request.form["title"], request.form["passwd"])
+
     except OSError:  # ...no overwriting other submissions, sorry mate
         pass
 
     return redirect("/")
+
 
 @app.route("/delsub", methods=["GET"])
 def delsub():
     with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
         curdata = json.loads(subsf.read())
         try:
-            os.remove(os.path.join(
-                "userdata",
-                curdata[request.args.get("subid")]["file"]
-            ))  # remove the file...
+            os.remove(
+                os.path.join("userdata", curdata[request.args.get("subid")]["file"])
+            )  # remove the file...
         except OSError:
             #  for some reason the file did not exist... or maybe permissions messed up?
             pass
+
+        uf = ul.userfile(
+            os.path.join("userdata", "passwd"), os.path.join("userdata", "shadow")
+        )
+        uf.del_user(request.args.get("subid"))
 
         del curdata[request.args.get("subid")]  # remove that entry...
 
@@ -91,5 +126,6 @@ def delsub():
         subsf.write(json.dumps(curdata))  # and write the new one
 
     return redirect("/")
+
 
 app.run(host="0.0.0.0", port=8080, debug=True)

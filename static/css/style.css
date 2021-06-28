@@ -16,6 +16,8 @@ body {
 .disclaimer {
   font-style: italic;
   font-size: 1.1em;
+  text-align: center;
+  margin: auto;
 }
 
 table {
@@ -40,6 +42,10 @@ table, th, td {
   margin-left: auto;
   margin-right: auto;
   width: 60%;
+}
+
+.nounderl {
+  text-decoration: none;
 }
 
 #submitbtn {
@@ -77,7 +83,7 @@ table, th, td {
   position: fixed;
   border: 1px solid black;
   top: 0;
-  left: calc(50vw - 1px);
+  left: 49vw;
   width: 0;
   height: 100vh;
 }
@@ -85,31 +91,58 @@ table, th, td {
 .fishinterout {
 }
 
-#out {
+#outdiv {
   float: left;
 
-  width: 49vw;
+  width: calc(50vw - 4ch);
   height: 100vh;
+  box-sizing: border-box;
+
+  padding-left: 2ch;
+  padding-right: 2ch;
+  margin: 0;
+}
+
+#out {
+  width: 100%;
+  height: 80%;
 
   font-family: monospace;
   font-size: 1.5em;
   line-height: 1.1em;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
 
-  padding-left: 1ch;
-  overflow: auto;
+  padding: 0;
+  margin: 0;
+
+  overflow-x: wrap;
+  overflow-y: auto;
+}
+
+#debugdiv {
+  float: right;
+
+  width: calc(50vw - 4ch);
+  height: 100vh;
+  box-sizing: border-box;
+
+  padding-left: 2ch;
+  padding-right: 2ch;
+  margin: 0;
 }
 
 #debug {
-  float: right;
-
-  width: 49vw;
-  height: 100vh;
+  width: 100%;
+  height: 80%;
 
   font-family: monospace;
   line-height: 0.3em;
   white-space: pre;
 
-  padding-left: 2ch;
-  overflow: auto;
+  padding: 0;
+  margin: 0;
+
+  overflow-x: auto;
+  overflow-y: auto;
 }

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Submit code</title>
+    <title>Edit {{subid}} </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script>
       function replaceit(x, noty)
@@ -16,17 +16,10 @@
   </head>
   <body>
     <div id="toptitle">
-      <h1>Submit your code here</h1>
+      <h1>Edit {{subid}}</h1>
     </div>
 
-    <form action="/postsubmit" method="post" style="text-align: center;">
-      <label for="author">Author:</label>
-      <input type="text" id="author", name="author" required="required">
-      <label for="title">Title:</label>
-      <input type="text" id="title", name="title" required="required">
-      <label for="passwd">Password:</label>
-      <input type="password" id="passwd", name="passwd" required="required">
-
+    <form action="/postedit?subid={{subid}}" method="post" style="text-align: center;">
       <br><br>
 
       <!--  no time for this :(
@@ -38,12 +31,9 @@
       -->
 
       <div id="textupload">
-        <textarea rows="40" cols="100" id="codebox" name="codebox"></textarea>
+        <textarea rows="40" cols="100" id="codebox" name="codebox">{{codebox}}</textarea>
         <br>
-        <button type="submit">Submit!</button>
-        <a href="/">
-          <button type="button">Cancel</button>
-        </a>
+        <button type="submit">Resubmit!</button>
       </div>
 
       <!--  ditto
