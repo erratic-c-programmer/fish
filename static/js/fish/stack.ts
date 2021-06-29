@@ -8,7 +8,7 @@ export interface Stack {
 };
 
 let օ = null;
-export let о=(o,о,ο=o=>o.o===օ)=>(о=>о(о))(о=>օ=>ο(օ)?o(օ):о(о)(օ.o))(о);
+export let о=(o,о,ο=o=>o.o===օ)=>(о=>о(о))(о=>օ=>ο(օ)?o(օ):о(о)(օ.o))(о);  // Y oh Y
 
 export function stack_normal_push(v: number, stack: Stack)
 {

@@ -14,7 +14,7 @@ app.secret_key = os.urandom(12)
 @app.route("/index")
 @app.route("/")
 def root():
-    subs_json_file = open("userdata/subs.json", "r")  # {"subid": {"author":, "file":}}
+    subs_json_file = open(os.path.join("userdata", "PROT", "subs.json"), "r")  # {"subid": {"author":, "file":}}
     ret = render_template("index.html.jinja", submissions=json.load(subs_json_file))
     subs_json_file.close()
     return ret
@@ -22,7 +22,7 @@ def root():
 
 @app.route("/getsub", methods=["GET"])
 def getsub():
-    subs_json_file = open("userdata/subs.json", "r")
+    subs_json_file = open(os.path.join("userdata", "PROT", "subs.json"), "r")
     data = json.load(subs_json_file)
     subid = request.args.get("subid")
 
@@ -49,7 +49,7 @@ def submit():
 
 @app.route("/editsub", methods=["GET", "POST"])
 def editsub():
-    with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+    with open(os.path.join("userdata", "PROT", "subs.json"), "r+") as subsf:
         curdata = json.loads(subsf.read())
         with open(
             os.path.join("userdata", curdata[request.args.get("subid")]["file"]), "r+"
@@ -60,7 +60,7 @@ def editsub():
 
 @app.route("/postedit", methods=["POST", "GET"])
 def postedit():
-    with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+    with open(os.path.join("userdata", "PROT", "subs.json"), "r+") as subsf:
         curdata = json.loads(subsf.read())
         with open(
             os.path.join("userdata", curdata[request.args.get("subid")]["file"]), "w"
@@ -72,29 +72,32 @@ def postedit():
 @app.route("/postsubmit", methods=["POST"])
 def postsubmit():
     try:
+
+        mtitle = request.form["title"].replace("/", "")  # strip /
+
         # Create file if it does not exist, else do nothing
-        f = open(os.path.join("userdata", request.form["title"]), "x")
+        f = open(os.path.join("userdata", mtitle), "x")
         f.close()
-        f = open(os.path.join("userdata", request.form["title"]), "w")
+        f = open(os.path.join("userdata", mtitle), "w")
         f.write(request.form["codebox"])
         f.close()
 
-        with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+        with open(os.path.join("userdata", "PROT", "subs.json"), "r+") as subsf:
             # add it to our submission JSON file
             curdata = json.loads(subsf.read())
-            curdata[request.form["title"]] = {
+            curdata[mtitle] = {
                 "author": request.form["author"],
-                "file": request.form["title"],
+                "file": mtitle,
             }
             subsf.seek(0)
             subsf.truncate()
             subsf.write(json.dumps(curdata))
 
             uf = ul.userfile(
-                os.path.join("userdata", "passwd"), os.path.join("userdata", "shadow")
+                os.path.join("userdata", "PROT", "passwd"), os.path.join("userdata", "PROT", "shadow")
             )
 
-            uf.add_user(request.form["title"], request.form["passwd"])
+            uf.add_user(mtitle, request.form["passwd"])
 
     except OSError:  # ...no overwriting other submissions, sorry mate
         pass
@@ -104,7 +107,7 @@ def postsubmit():
 
 @app.route("/delsub", methods=["GET"])
 def delsub():
-    with open(os.path.join("userdata", "subs.json"), "r+") as subsf:
+    with open(os.path.join("userdata", "PROT", "subs.json"), "r+") as subsf:
         curdata = json.loads(subsf.read())
         try:
             os.remove(
@@ -115,7 +118,7 @@ def delsub():
             pass
 
         uf = ul.userfile(
-            os.path.join("userdata", "passwd"), os.path.join("userdata", "shadow")
+            os.path.join("userdata", "PROT", "passwd"), os.path.join("userdata", "PROT", "shadow")
         )
         uf.del_user(request.args.get("subid"))
 
